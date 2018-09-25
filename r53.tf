@@ -16,5 +16,5 @@ resource "aws_route53_record" "directory-zone" {
 #   name = "foo"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_directory_service_directory.bar.dns_ip_addresses.*}"]
+  records = ["${aws_directory_service_directory.bar.dns_ip_addresses[count.index]}"]
 }
