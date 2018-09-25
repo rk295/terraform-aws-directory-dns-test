@@ -1,25 +1,20 @@
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
-    tags {
+
+  tags {
     Name = "directory-test"
   }
-
 }
 
-resource "aws_subnet" "foo" {
+resource "aws_subnet" "private" {
+  count = "${length(var.private_subnets)}"
+
   vpc_id            = "${aws_vpc.main.id}"
-  availability_zone = "eu-west-2a"
-  cidr_block        = "10.0.1.0/24"
-      tags {
-    Name = "directory-test-a"
+  cidr_block        = "${var.private_subnets[count.index]}"
+  availability_zone = "${element(var.azs, count.index)}"
+
+  tags {
+    Name = "directory-test-${count.index}"
   }
 }
 
-resource "aws_subnet" "bar" {
-  vpc_id            = "${aws_vpc.main.id}"
-  availability_zone = "eu-west-2b"
-  cidr_block        = "10.0.2.0/24"
-        tags {
-    Name = "directory-test-b"
-  }
-}
